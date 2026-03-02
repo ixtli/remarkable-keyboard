@@ -1,6 +1,8 @@
 # reMarkable Paper Pro 2 — Keyboard & Developer Tools
 
-Use a Bluetooth or USB keyboard with a reMarkable Paper Pro 2 in developer mode.
+Use a Bluetooth or USB keyboard with a reMarkable Paper Pro 2.
+
+> **WARNING: Developer mode required.** Everything in this project requires your reMarkable to be in [developer mode](https://support.remarkable.com/s/article/Developer-mode). Enabling developer mode **performs a factory reset** and erases all data on the device. Back up your work first. This cannot be undone without another factory reset.
 
 **Designed for use with [Claude Code](https://claude.ai/claude-code)** — the `CLAUDE.md` file gives Claude full context to help you set up, troubleshoot, and extend this project. You can also do everything manually with the scripts and instructions below.
 
