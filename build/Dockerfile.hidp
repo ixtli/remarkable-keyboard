@@ -1,0 +1,45 @@
+FROM --platform=linux/amd64 ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    bc \
+    bison \
+    flex \
+    libssl-dev \
+    libelf-dev \
+    python3 \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy SDK installer and kernel source
+COPY toolchain.sh /tmp/toolchain.sh
+COPY linux-imx-rm/linux-imx-rel-5.5-uscg-3.25.1.1-95c3acd37afa /src
+
+# Copy Module.symvers extracted from device (symbol CRCs for modversions)
+COPY Module.symvers /src/Module.symvers
+
+# Install SDK
+RUN chmod +x /tmp/toolchain.sh && \
+    /tmp/toolchain.sh -y -d /opt/sdk && \
+    rm /tmp/toolchain.sh
+
+# Build hidp.ko
+WORKDIR /src
+RUN bash -c '\
+    source /opt/sdk/environment-setup-cortexa53-crypto-remarkable-linux && \
+    make ferrari_defconfig && \
+    # Fix LOCALVERSION to match device kernel \
+    sed -i "s/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=\"+git-imx8mm-ferrari-g95c3acd37afa\"/" .config && \
+    # Force BT_HIDP to module \
+    sed -i "s/CONFIG_BT_HIDP=y/CONFIG_BT_HIDP=m/" .config && \
+    sed -i "s/# CONFIG_BT_HIDP is not set/CONFIG_BT_HIDP=m/" .config && \
+    grep -q CONFIG_BT_HIDP .config || echo "CONFIG_BT_HIDP=m" >> .config && \
+    make olddefconfig && \
+    grep BT_HIDP .config && \
+    # Prepare headers and scripts for module build \
+    make modules_prepare && \
+    # Build hidp module using device-extracted Module.symvers \
+    make KBUILD_MODPOST_WARN=1 M=net/bluetooth/hidp modules \
+'
+
+CMD ["bash", "-c", "cp /src/net/bluetooth/hidp/hidp.ko /output/"]

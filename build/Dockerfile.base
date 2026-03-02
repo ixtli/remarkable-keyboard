@@ -1,0 +1,23 @@
+FROM --platform=linux/amd64 ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    bc \
+    bison \
+    flex \
+    libssl-dev \
+    libelf-dev \
+    python3 \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy SDK installer and kernel source
+COPY toolchain.sh /tmp/toolchain.sh
+COPY linux-imx-rm/linux-imx-rel-5.5-uscg-3.25.1.1-95c3acd37afa /src
+
+# Install SDK
+RUN chmod +x /tmp/toolchain.sh && \
+    /tmp/toolchain.sh -y -d /opt/sdk && \
+    rm /tmp/toolchain.sh
+
+WORKDIR /src
