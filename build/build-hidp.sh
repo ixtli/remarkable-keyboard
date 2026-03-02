@@ -1,5 +1,5 @@
 #!/bin/sh
-# build-hidp.sh — Cross-compile hidp.ko for reMarkable Paper Pro 2
+# build-hidp.sh — Cross-compile hidp.ko for reMarkable Paper Pro
 #
 # Runs on Mac (or any Docker host). Builds inside an x86_64 container
 # using the official reMarkable SDK + kernel source.

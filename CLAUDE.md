@@ -1,7 +1,7 @@
-# reMarkable Paper Pro 2 — Keyboard & Developer Tools
+# reMarkable Paper Pro — Keyboard & Developer Tools
 
 ## Device
-- **Model**: reMarkable Paper Pro 2
+- **Model**: reMarkable Paper Pro
 - **SoC**: i.MX8M Mini (aarch64, Cortex-A53)
 - **Kernel**: Linux 6.12.34+git-imx8mm-ferrari-g95c3acd37afa
 - **SSH**: Dropbear (not OpenSSH)

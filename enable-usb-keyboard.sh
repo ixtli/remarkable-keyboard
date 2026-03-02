@@ -1,8 +1,8 @@
 #!/bin/sh
-# enable-usb-keyboard.sh — Idempotent script to enable USB keyboard on reMarkable Paper Pro 2
+# enable-usb-keyboard.sh — Idempotent script to enable USB keyboard on reMarkable Paper Pro
 #
 # Prerequisites:
-#   - reMarkable Paper Pro 2 in developer mode
+#   - reMarkable Paper Pro in developer mode
 #   - USB-C to USB-A OTG adapter (C male → A female)
 #   - Powered USB-A hub (with its own AC adapter)
 #   - USB keyboard plugged into the powered hub

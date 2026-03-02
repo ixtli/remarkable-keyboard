@@ -1,6 +1,6 @@
-# reMarkable Paper Pro 2 — Keyboard & Developer Tools
+# reMarkable Paper Pro — Keyboard & Developer Tools
 
-Use a Bluetooth or USB keyboard with a reMarkable Paper Pro 2.
+Use a Bluetooth or USB keyboard with a reMarkable Paper Pro.
 
 > **WARNING: Developer mode required.** Everything in this project requires your reMarkable to be in [developer mode](https://support.remarkable.com/s/article/Developer-mode). Enabling developer mode **performs a factory reset** and erases all data on the device. Back up your work first. This cannot be undone without another factory reset.
 
@@ -12,7 +12,7 @@ No extra hardware needed. The reMarkable has a Bluetooth chip (NXP 88W8987) but 
 
 ### Prerequisites
 
-- reMarkable Paper Pro 2 in [developer mode](https://support.remarkable.com/s/article/Developer-mode)
+- reMarkable Paper Pro in [developer mode](https://support.remarkable.com/s/article/Developer-mode)
 - SSH access to device (USB cable)
 - Docker (for cross-compiling the kernel module)
 - A Bluetooth keyboard
@@ -107,4 +107,4 @@ If the kernel version changed, you'll also need to re-extract `Module.symvers` f
 ## Tested Hardware
 
 - **Keychron K7 Pro** (Bluetooth, BD Address: 6C:93:08:62:5C:BF)
-- reMarkable Paper Pro 2, firmware 5.5.125, kernel 6.12.34
+- reMarkable Paper Pro, firmware 5.5.125, kernel 6.12.34
