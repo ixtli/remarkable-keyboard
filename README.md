@@ -106,5 +106,10 @@ If the kernel version changed, you'll also need to re-extract `Module.symvers` f
 
 ## Tested Hardware
 
-- **Keychron K7 Pro** (Bluetooth, BD Address: 6C:93:08:62:5C:BF)
+- **Keychron K7 Pro** (Bluetooth Classic)
+- **Apple Magic Keyboard A2450** (Bluetooth Classic)
 - reMarkable Paper Pro, firmware 5.5.125, kernel 6.12.34
+
+### Apple Keyboard Notes
+
+Apple keyboards need an extra config change (`ClassicBondedOnly=false` in `input.conf`) because they don't allow BlueZ to store link keys. The install script handles this automatically. Apple keyboards also don't show up in `bluetoothctl scan` — use `hcitool scan` to find the address, then `hcitool cc <addr>` before pairing in `bluetoothctl`.

@@ -8,6 +8,7 @@
 #   1. Copies hidp.ko to /lib/modules/<version>/kernel/net/bluetooth/hidp/
 #   2. Runs depmod to update module database
 #   3. Removes btnxpuart blacklist on persistent rootfs (survives reboot)
+#   4. Sets ClassicBondedOnly=false in input.conf (required for Apple keyboards)
 #
 # After install + reboot, BT keyboard auto-connects with no manual steps.
 #
@@ -49,9 +50,12 @@ echo "Module database updated."
 # and modify the underlying file.
 echo "Checking btnxpuart blacklist..."
 ssh "root@${REMARKABLE_IP}" '
+    # Remount root rw so we can access the underlying rootfs
+    mount -o remount,rw /
     mkdir -p /tmp/rootfs
-    mount /dev/mmcblk0p2 /tmp/rootfs 2>/dev/null || true
+    mount /dev/mmcblk0p2 /tmp/rootfs
 
+    # Remove btnxpuart blacklist
     BLACKLIST="/tmp/rootfs/etc/modprobe.d/btnxpuart.conf"
     if [ -f "$BLACKLIST" ] && grep -q "^blacklist" "$BLACKLIST"; then
         echo "# blacklist removed to enable BT keyboard at boot" > "$BLACKLIST"
@@ -60,8 +64,19 @@ ssh "root@${REMARKABLE_IP}" '
         echo "Blacklist already cleared."
     fi
 
-    umount /tmp/rootfs 2>/dev/null || true
-    rmdir /tmp/rootfs 2>/dev/null || true
+    # Allow HID connections from non-bonded devices (Apple keyboards
+    # send store_hint=0 which prevents BlueZ from persisting link keys)
+    INPUT_CONF="/tmp/rootfs/etc/bluetooth/input.conf"
+    if [ -f "$INPUT_CONF" ] && ! grep -q "^ClassicBondedOnly=false" "$INPUT_CONF"; then
+        sed -i "/^\[General\]/a ClassicBondedOnly=false" "$INPUT_CONF"
+        echo "ClassicBondedOnly=false set (persistent)."
+    else
+        echo "ClassicBondedOnly already configured."
+    fi
+
+    umount /tmp/rootfs
+    rmdir /tmp/rootfs 2>/dev/null
+    mount -o remount,ro /
 '
 
 echo ""
