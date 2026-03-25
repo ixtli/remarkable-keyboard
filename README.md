@@ -76,14 +76,15 @@ ssh root@10.11.99.1 /home/root/wifi-ssh-off.sh
 
 ```
 ├── CLAUDE.md                    # Claude Code project instructions
-├── deploy.sh                    # Deploy device scripts over SSH
+├── deploy.sh                    # Deploy all device scripts over SSH
+├── pair-apple-kb.sh             # Re-pair Apple Magic Keyboard (runs on device)
 ├── enable-usb-keyboard.sh       # Switch USB to host mode (runs on device)
 ├── disable-usb-keyboard.sh      # Restore USB gadget mode (runs on device)
 ├── wifi-ssh-on.sh               # Enable WiFi SSH (runs on device)
 ├── wifi-ssh-off.sh              # Disable WiFi SSH (runs on device)
 └── build/
     ├── build-hidp.sh            # Cross-compile hidp.ko via Docker
-    ├── install-hidp.sh          # Deploy module + remove BT blacklist
+    ├── install-hidp.sh          # Deploy module + configure BT for boot
     ├── Dockerfile.hidp          # Docker build for hidp.ko
     ├── Dockerfile.base          # Base image with SDK (for debugging)
     └── Module.symvers           # Device-extracted symbol CRCs
@@ -112,6 +113,10 @@ If the kernel version changed, you'll also need to re-extract `Module.symvers` f
 
 ### Apple Keyboard Notes
 
-Apple keyboards need an extra config change (`ClassicBondedOnly=false` in `input.conf`) because they send `store_hint=0` during pairing, preventing BlueZ from persisting link keys. The install script handles this automatically.
+Apple Magic Keyboards have several quirks on non-Apple hosts:
 
-Apple keyboards also don't show up in `bluetoothctl scan` — use `hcitool scan` to find the address, then `hcitool cc <addr>` before pairing in `bluetoothctl`. macOS will silently auto-pair Apple keyboards when plugged in via USB — disable Bluetooth on the Mac first or the keyboard will reconnect there instead.
+- **No bonding**: They send `store_hint=0` during pairing, so BlueZ won't persist link keys. This means the keyboard does NOT auto-reconnect after a power switch toggle. Sleep/wake works fine.
+- **Config required**: `ClassicBondedOnly=false` must be set in `/etc/bluetooth/input.conf` or BlueZ rejects the HIDP connection. The install script handles this.
+- **Not discoverable via bluetoothctl**: Use `hcitool scan` to find the address, then `hcitool cc <addr>` before pairing in `bluetoothctl`.
+- **macOS auto-pairs**: Plugging an Apple keyboard into a Mac via USB silently pairs it over BT. Disable Mac Bluetooth first or the keyboard will reconnect there instead.
+- **Re-pair after power cycle**: Run `ssh root@<IP> /home/root/pair-apple-kb.sh` after toggling the keyboard switch. Not needed for sleep/wake.
