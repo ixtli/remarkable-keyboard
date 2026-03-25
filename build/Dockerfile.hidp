@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:24.04
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -27,9 +27,11 @@ RUN chmod +x /tmp/toolchain.sh && \
 WORKDIR /src
 RUN bash -c '\
     source /opt/sdk/environment-setup-cortexa53-crypto-remarkable-linux && \
+    # Patch kernel base version to match device (source is 6.12.34, device is 6.12.49) \
+    sed -i "s/^SUBLEVEL = .*/SUBLEVEL = 49/" Makefile && \
     make ferrari_defconfig && \
     # Fix LOCALVERSION to match device kernel \
-    sed -i "s/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=\"+git-imx8mm-ferrari-g95c3acd37afa\"/" .config && \
+    sed -i "s/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=\"+git-imx8mm-ferrari-g122eda1b63d9\"/" .config && \
     # Force BT_HIDP to module \
     sed -i "s/CONFIG_BT_HIDP=y/CONFIG_BT_HIDP=m/" .config && \
     sed -i "s/# CONFIG_BT_HIDP is not set/CONFIG_BT_HIDP=m/" .config && \

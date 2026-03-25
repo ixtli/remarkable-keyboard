@@ -3,7 +3,7 @@
 ## Device
 - **Model**: reMarkable Paper Pro
 - **SoC**: i.MX8M Mini (aarch64, Cortex-A53)
-- **Kernel**: Linux 6.12.34+git-imx8mm-ferrari-g95c3acd37afa
+- **Kernel**: Linux 6.12.49+git-imx8mm-ferrari-g122eda1b63d9 (updated from 6.12.34)
 - **SSH**: Dropbear (not OpenSSH)
 - **Shell**: BusyBox ash (not bash — no arrays, limited builtins, use `head -n 5` not `head -5`)
 - **WiFi IP**: 192.168.1.211

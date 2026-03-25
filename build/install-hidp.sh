@@ -35,8 +35,8 @@ echo "Device kernel: $KVER"
 MODULE_DIR="/lib/modules/$KVER/kernel/net/bluetooth/hidp"
 
 # Deploy hidp.ko
-# Root filesystem is ext4 rw on mmcblk0p2 — module directory persists
-ssh "root@${REMARKABLE_IP}" "mkdir -p $MODULE_DIR"
+# Root filesystem may be mounted read-only — remount rw first
+ssh "root@${REMARKABLE_IP}" "mount -o remount,rw / && mkdir -p $MODULE_DIR"
 scp "$HIDP_KO" "root@${REMARKABLE_IP}:${MODULE_DIR}/hidp.ko"
 echo "Copied hidp.ko to $MODULE_DIR/"
 
