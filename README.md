@@ -107,9 +107,11 @@ If the kernel version changed, you'll also need to re-extract `Module.symvers` f
 ## Tested Hardware
 
 - **Keychron K7 Pro** (Bluetooth Classic)
-- **Apple Magic Keyboard A2450** (Bluetooth Classic)
+- **Apple Magic Keyboard (USB-C, 2024)** — VID 05ac PID 0320 (Bluetooth Classic)
 - reMarkable Paper Pro, firmware 5.5.125, kernel 6.12.34
 
 ### Apple Keyboard Notes
 
-Apple keyboards need an extra config change (`ClassicBondedOnly=false` in `input.conf`) because they don't allow BlueZ to store link keys. The install script handles this automatically. Apple keyboards also don't show up in `bluetoothctl scan` — use `hcitool scan` to find the address, then `hcitool cc <addr>` before pairing in `bluetoothctl`.
+Apple keyboards need an extra config change (`ClassicBondedOnly=false` in `input.conf`) because they send `store_hint=0` during pairing, preventing BlueZ from persisting link keys. The install script handles this automatically.
+
+Apple keyboards also don't show up in `bluetoothctl scan` — use `hcitool scan` to find the address, then `hcitool cc <addr>` before pairing in `bluetoothctl`. macOS will silently auto-pair Apple keyboards when plugged in via USB — disable Bluetooth on the Mac first or the keyboard will reconnect there instead.
