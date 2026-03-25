@@ -19,8 +19,9 @@ scp "$SCRIPT_DIR/enable-usb-keyboard.sh" \
     "$SCRIPT_DIR/disable-usb-keyboard.sh" \
     "$SCRIPT_DIR/wifi-ssh-on.sh" \
     "$SCRIPT_DIR/wifi-ssh-off.sh" \
+    "$SCRIPT_DIR/pair-apple-kb.sh" \
     "root@${REMARKABLE_IP}:/home/root/"
-ssh "root@${REMARKABLE_IP}" 'chmod +x /home/root/enable-usb-keyboard.sh /home/root/disable-usb-keyboard.sh /home/root/wifi-ssh-on.sh /home/root/wifi-ssh-off.sh'
+ssh "root@${REMARKABLE_IP}" 'chmod +x /home/root/*.sh'
 
 echo "Scripts deployed. Run on reMarkable:"
 echo "  USB keyboard on:  ssh root@192.168.1.211 /home/root/enable-usb-keyboard.sh"
